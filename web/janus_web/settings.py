@@ -24,6 +24,7 @@ ALLOWED_HOSTS = []
 
 # Application definition
 INSTALLED_APPS = [
+    'api.apps.APIConfig',
     'castles.apps.CastlesConfig',
     'django.contrib.admin',
     'django.contrib.auth',
