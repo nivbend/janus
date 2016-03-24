@@ -25,6 +25,7 @@ class Castle(Model):
     created = DateTimeField(auto_now_add = True)
     last_modified = DateTimeField(auto_now = True)
     host = GenericIPAddressField(protocol = 'IPv4', default = '0.0.0.0', unique = True)
+    alias = CharField(max_length = 20, blank = True, unique = True)
     gatekeeper = GenericIPAddressField(protocol = 'IPv4', default = '0.0.0.0', unique = True)
     rooms = ManyToManyField(Room)
     user = GenericIPAddressField(protocol = 'IPv4', null = True, blank = True, editable = False)

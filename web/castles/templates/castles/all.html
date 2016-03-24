@@ -27,7 +27,11 @@
             <tbody>
                 {% for castle in castles %}
                     <tr class="{{ castle.user|yesno:"danger,success" }}">
-                        <td>{{ castle.host }}</td>
+                        {% if castle.alias %}
+                            <td><abbr title="{{ castle.host }}">{{ castle.alias }}</abbr></td>
+                        {% else %}
+                            <td>{{ castle.host }}</td>
+                        {% endif %}
                         <td>{{ castle.gatekeeper }}</td>
                         {% if castle.user %}
                             <td>{{ castle.user }} ({{ castle.taken_at|timesince }} ago)</td>
