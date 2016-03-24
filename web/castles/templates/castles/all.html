@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Castles{% endblock %}
+
+{% block header %}
+    {% if "0" != request.GET.refresh %}
+        <meta http-equiv="refresh" content="{{ request.GET.refresh|default:60 }}"/>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <h2>Castles</h2>
+    {% if castles %}
+        <table class="table table-hover">
+            <colgroup>
+                <col class="col-md-3">
+                <col class="col-md-3">
+                <col class="col-md-6">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>Host</th>
+                    <th>Gatekeeper</th>
+                    <th>Taken</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for castle in castles %}
+                    <tr class="{{ castle.user|yesno:"danger,success" }}">
+                        <td>{{ castle.host }}</td>
+                        <td>{{ castle.gatekeeper }}</td>
+                        {% if castle.user %}
+                            <td>{{ castle.user }} ({{ castle.taken_at|timesince }} ago)</td>
+                        {% else %}
+                            <td>Available</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="bg-danger">No castles! :(</p>
+    {% endif %}
+{% endblock %}
