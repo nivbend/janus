@@ -1,7 +1,8 @@
 """Manage connections between clients and the "castle" (remote resource)."""
 
-from socket import socket, AF_INET, SOCK_STREAM
+from socket import socket, AF_INET, SOCK_STREAM, SOCK_DGRAM
 from SocketServer import ThreadingTCPServer
+from abc import ABCMeta, abstractmethod
 
 from .forward import ForwardingHandler
 
@@ -10,6 +11,7 @@ class Gate(ThreadingTCPServer, object):
 
     A gate is a server which connects the tunnel for each incoming connection.
     """
+    __metaclass__ = ABCMeta
     allow_reuse_address = True
 
     def __init__(self, outer_port, castle_host, room_port):
@@ -41,11 +43,10 @@ class Gate(ThreadingTCPServer, object):
         self.__inner_socket = None
         request.close()
 
+    @abstractmethod
     def _open_gate(self):
         """Open the gate - essentially connecting to the room's port on the castle resource."""
-        inner_socket = socket(AF_INET, SOCK_STREAM)
-        inner_socket.connect(self.room_address)
-        return inner_socket
+        return None
 
     def __str__(self):
         (_, outer_port) = self.server_address
@@ -55,3 +56,17 @@ class Gate(ThreadingTCPServer, object):
             self.__castle_host,
             self.__room_port,
         )
+
+class TCPGate(Gate):
+    """A gate connecting via TCP."""
+    def _open_gate(self):
+        inner_socket = socket(AF_INET, SOCK_STREAM)
+        inner_socket.connect(self.room_address)
+        return inner_socket
+
+class UDPGate(Gate):
+    """A gate connecting via UDP."""
+    def _open_gate(self):
+        inner_socket = socket(AF_INET, SOCK_DGRAM)
+        inner_socket.connect(self.room_address)
+        return inner_socket

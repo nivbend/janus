@@ -2,7 +2,7 @@
 
 from argparse import ArgumentParser, Action
 from collections import namedtuple
-from .gate import Gate
+from .gate import TCPGate
 
 SSH_PORT = 22
 
@@ -57,7 +57,7 @@ def run():
     """Package's entry-point."""
     arguments = _parse_arguments()
 
-    gate = Gate(
+    gate = TCPGate(
         arguments.gate_port,
         arguments.castle.host,
         arguments.castle.port)
