@@ -1,11 +1,11 @@
 """Manage connections between clients and the "castle" (remote resource)."""
 
 from socket import socket, AF_INET, SOCK_STREAM
-from SocketServer import TCPServer
+from SocketServer import ThreadingTCPServer
 
 from .forward import ForwardingHandler
 
-class Gate(TCPServer, object):
+class Gate(ThreadingTCPServer, object):
     """Guard a connection between a "room" in a "castle" (server port on a resource).
 
     A gate is a server which connects the tunnel for each incoming connection.
